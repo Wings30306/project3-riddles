@@ -77,7 +77,7 @@ def play_game():
             print(riddle["riddle"] + "\n")
             total_questions += 1
             #user's answer is registered in the guess variable
-            guess = input("Your answer: ")
+            guess = input("Your answer: ").lower
             answer = riddle["answer"]
             #this if statement checks whether the answer keyword from the file is in the guess
             #this prevents answers from being read as wrong due to an article or a verbose phrasing
