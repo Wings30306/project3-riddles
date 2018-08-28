@@ -1,5 +1,10 @@
 import json
 
+
+#global variables
+user = ""
+
+
 """
 This is the starting menu. 
 It is where users can sign in if they already have a username, or register if they don't.
@@ -35,7 +40,7 @@ def sign_in():
     with open("data/users.txt", "r") as file:
         active_users = file.read().splitlines()
         if username in active_users:
-            play_game()
+            play_game(username)
         else:
             print("sorry, this username is incorrect. New user? Please register.")
 
@@ -64,9 +69,8 @@ def register():
 """
 After signing in, users will be asked twenty riddles from the json file
 """
-def play_game():
+def play_game(user):
     #These vars ensure the score is set to 0 before playing.
-    user = ""
     score = 0 
     total_questions = 0
     #opens the riddles.json file to get the riddles and answer keywords
@@ -90,6 +94,11 @@ def play_game():
             print("You have so far answered {0} out of {1} question(s) correctly.\n\n".format(score, total_questions))
     #when all riddles are answered, this marks the end of the quiz    
     print("Congratulations {2}, you have completed the quiz and scored {0}/{1}.".format(score, total_questions, user))
+    file = open("data/score.txt", "a")
+    file.write(user + ": ")
+    file.write(str(score) + "\n")
+    
+
 
 
 
