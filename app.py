@@ -1,3 +1,5 @@
+import json
+
 """
 This is the starting menu. 
 It is where users can sign in if they already have a username, or register if they don't.
@@ -33,7 +35,7 @@ def sign_in():
     with open("data/users.txt", "r") as file:
         active_users = file.read().splitlines()
         if username in active_users:
-            print("Answer riddles")
+            play_game()
         else:
             print("sorry, this username is incorrect. New user? Please register.")
 
@@ -57,6 +59,36 @@ def register():
             file = open("data/users.txt", "a")
             file.write(user + "\n")
             print("You are now registered. Please sign in to continue.") 
+
+
+"""
+After signing in, users will be asked twenty riddles from the json file
+"""
+def play_game():
+    #These vars ensure the score is set to 0 before playing.
+    user = ""
+    score = 0 
+    total_questions = 0
+    #opens the riddles.json file to get the riddles and answer keywords
+    with open("data/riddles.json") as riddle_data:
+        data = json.load(riddle_data)
+        for riddle in data["riddles"]:
+          #For every riddle asked, 1 is added to the total_questions variable
+            print(riddle["riddle"] + "\n")
+            total_questions += 1
+            #user's answer is registered in the guess variable
+            guess = input("Your answer: ")
+            answer = riddle["answer"]
+            #this if statement checks whether the answer keyword from the file is in the guess
+            #this prevents answers from being read as wrong due to an article or a verbose phrasing
+            if answer in guess:
+                print("Well done!\n")
+                score += 1
+            else:
+                print("I'm sorry, this answer is incorrect.\n")
+            print("You have so far answered {0} out of {1} question(s) correctly.\n\n".format(score, total_questions))
+    #when all riddles are answered, this marks the end of the quiz    
+    print("Congratulations {2}, you have completed the quiz and scored {0}/{1}.".format(score, total_questions, user))
 
 
 
