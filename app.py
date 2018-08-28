@@ -1,3 +1,8 @@
+"""
+This is the starting menu. 
+It is where users can sign in if they already have a username, or register if they don't.
+If the input is anything other than 1 or 2, the function will stop.
+"""
 def show_menu():
     print("1. Sign in")
     print("2. Register")
@@ -17,3 +22,5 @@ def menu():
         print("")
 
 menu()
+
+
