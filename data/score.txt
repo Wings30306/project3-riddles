@@ -1,7 +1,0 @@
-wings: 1
-slashgirl: 3
-Kian: 7
-Markus: 11
-Bry: 13
-Shay: 2
-Nix: 4

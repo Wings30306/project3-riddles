@@ -1,4 +1,7 @@
 import json
+import random
+import os
+from collections import OrderedDict
 
 
 #global variables
@@ -13,6 +16,7 @@ If the input is anything other than 1 or 2, the function will stop.
 def show_menu():
     print("1. Sign in")
     print("2. Register")
+    print("3. See Leaderboard")
 
     option = input("Enter option: ")
     return option
@@ -24,6 +28,8 @@ def menu():
             sign_in()
         elif option == "2":
             register()
+        elif option == "3":
+            print("Showing Leaderboard")
         else: 
             break 
         print("")
@@ -34,13 +40,13 @@ If option 1 is selected in the menu, this function will allow the user to sign i
 If the username is not registered, the user will be asked to register.
 """
 def sign_in():
-    username = input("Your Username:\n")
+    name = input("Your Username:\n")
     active_users = {}
 
     with open("data/users.txt", "r") as file:
         active_users = file.read().splitlines()
-        if username in active_users:
-            play_game(username)
+        if name in active_users:
+            play_game(name)
         else:
             print("sorry, this username is incorrect. New user? Please register.")
 
@@ -53,29 +59,30 @@ If option 2 is selected in the menu, this function will allow the user to regist
 If the username is already in use, the user will be notified.
 """
 def register():
-    user = input("Please choose a username\n>")
+    name = input("Please choose a username\n>")
     active_users = {}
 
     with open("data/users.txt", "r") as file:
         active_users = file.read().splitlines()
-        if user in active_users:
+        if name in active_users:
             print("sorry, this username is taken. Please choose a different username.")
         else:            
             file = open("data/users.txt", "a")
-            file.write(user + "\n")
+            file.write(name + "\n")
             print("You are now registered. Please sign in to continue.") 
 
 
 """
 After signing in, users will be asked twenty riddles from the json file
 """
-def play_game(user):
+def play_game(name):
     #These vars ensure the score is set to 0 before playing.
     score = 0 
     total_questions = 0
     #opens the riddles.json file to get the riddles and answer keywords
     with open("data/riddles.json") as riddle_data:
         data = json.load(riddle_data)
+        random.shuffle(data["riddles"])
         for riddle in data["riddles"]:
           #For every riddle asked, 1 is added to the total_questions variable
             print(riddle["riddle"] + "\n")
@@ -93,13 +100,28 @@ def play_game(user):
                 print("I'm sorry, this answer is incorrect.\n")
             print("You have so far answered {0} out of {1} question(s) correctly.\n\n".format(score, total_questions))
     #when all riddles are answered, this marks the end of the quiz    
-    print("Congratulations {2}, you have completed the quiz and scored {0}/{1}.".format(score, total_questions, user))
-    file = open("data/score.txt", "a")
-    file.write(user + ": ")
-    file.write(str(score) + "\n")
-    
+    print("Congratulations {2}, you have completed the quiz and scored {0}/{1}.".format(score, total_questions, name))
+    #define user function for easily writing to json
+    def user(name, score):
+        user = {"user": name, "score" : score }
+        user = (user)
+        return (user)
+    #open json file to check content
+    with open("data/score.json", "r") as score_data:
+        leaderboard = json.load(score_data)
+        leaderboard["users"].append(user(name, score))
+        with open("data/score.json", "w") as score_data_updated:
+            json.dump(leaderboard, score_data_updated)
 
 
-
-
+"""
+def scoreboard():
+    with open("data/score.json", "r") as leaderboard:
+        scoreboard = json.load(leaderboard)
+        def alpha_sort(some_dict):
+            alpha = OrderedDict(sorted(scoreboard.items(), key=lambda x: x[0]))
+            for k, v in alpha.items():
+                print(k,v)
+    alpha_sort()
+"""
 menu()
