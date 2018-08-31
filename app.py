@@ -2,17 +2,22 @@ import json
 import random
 import os
 from collections import OrderedDict
+from flask import Flask, redirect, render_template, request, flash
+from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
+app = Flask(__name__)
 
 
 #global variables
 user = ""
 
 
+
 """
 This is the starting menu. 
 It is where users can sign in if they already have a username, or register if they don't.
-If the input is anything other than 1 or 2, the function will stop.
+If the input is anything other than 1, 2 or 3 the function will stop.
 """
+@app.route("/", methods=["GET", "POST"])
 def show_menu():
     print("1. Sign in")
     print("2. Register")
@@ -127,3 +132,9 @@ def scoreboard():
 
 
 menu()
+
+
+if __name__ == '__main__':
+    app.run(host=os.getenv('IP'),
+            port=os.getenv('PORT'),
+            debug=True)
