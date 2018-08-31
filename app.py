@@ -29,7 +29,7 @@ def menu():
         elif option == "2":
             register()
         elif option == "3":
-            print("Showing Leaderboard")
+            scoreboard()
         else: 
             break 
         print("")
@@ -111,17 +111,19 @@ def play_game(name):
         leaderboard = json.load(score_data)
         leaderboard["users"].append(user(name, score))
         with open("data/score.json", "w") as score_data_updated:
-            json.dump(leaderboard, score_data_updated)
+            json.dump(leaderboard, score_data_updated, indent=2)
 
 
-"""
+
 def scoreboard():
     with open("data/score.json", "r") as leaderboard:
         scoreboard = json.load(leaderboard)
-        def alpha_sort(some_dict):
-            alpha = OrderedDict(sorted(scoreboard.items(), key=lambda x: x[0]))
-            for k, v in alpha.items():
-                print(k,v)
-    alpha_sort()
-"""
+        #sorted_scoreboard = sorted(scoreboard["users"][0:3], key=lambda x: x.score, reverse=True)
+        print(scoreboard["users"][0]["user"], scoreboard["users"][0]["score"])
+        print(scoreboard["users"][1]["user"], scoreboard["users"][1]["score"])
+        print(scoreboard["users"][2]["user"], scoreboard["users"][2]["score"])
+        #print("\n")
+        #print(sorted_scoreboard)
+
+
 menu()
