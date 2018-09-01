@@ -1,0 +1,11 @@
+<form name="register" method="POST">
+  <h2>Not yet registered?<br>Please choose a username!</h2>
+  <input type="text" name="new_user" id="new_user" placeholder="Your username">
+  <button class="btn btn-success" value="register">Sign up!</button>
+  {% if register_message %}
+  {{ register_message }}
+  {% endif %}
+  <p>
+    <strong>Warning: </strong>This site is not secured, please don't put in privacy-sensitive information! Usernames will be displayed
+    on the leaderboard.</p>
+</form>

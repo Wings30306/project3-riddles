@@ -1,0 +1,14 @@
+<form name="sign_in" action="" method="POST">
+  <h2>Already registered?<br>Sign in here to play!</h2>
+  <input type="text" name="username" id="username" placeholder="Your username">
+  <button class="btn btn-success" value="sign_in">Let's answer some riddles!</button>
+  
+  {% if signin_message %}
+  {{ signin_message }}
+  {% endif %}
+  
+
+  <p>
+    <strong>Warning: </strong>This site is not secured, please don't put in privacy-sensitive information! Usernames will be displayed
+    on the leaderboard.</p>
+</form>

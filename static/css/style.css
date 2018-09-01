@@ -1,0 +1,18 @@
+header {
+  height: 30vh;
+  background: blue;
+  text-align: center
+}
+.col-md-6 {
+  height: 60vh;
+}
+#sign-in {
+  background-color: yellow
+}
+#register {
+  background-color: red
+}
+footer {
+  height: 10vh;
+  background: blue
+}
