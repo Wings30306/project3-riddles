@@ -14,36 +14,45 @@ def index():
 
 @app.route("/sign_in", methods=["POST"])
 def sign_in():
-    name = request.form["username"]
+    user = request.form["username"]
     with open("data/users.txt", "r") as file:
         active_users = file.read().splitlines()
-        if name in active_users:
-            render_template("riddles.html", username=name)
-            return redirect(url_for("riddles"), name)
+        if user in active_users:
+            render_template("riddles.html", username=user)
+            return redirect(url_for("riddles"))
         else:
-            signin_message = "Sorry, this username is incorrect. New user? Please register."
+            signin_message = "Sorry, this user is incorrect. New user? Please register."
             return render_template("index.html", signin_message=signin_message)
 
 
 @app.route("/register", methods=["POST"])
 def register():
-    name = request.form["new_user"]
+    user = request.form["new_user"]
     with open("data/users.txt", "r") as file:
         active_users = file.read().splitlines()
-        if name in active_users:
+        if user in active_users:
             register_message = "Sorry, this username is taken. Please choose a different username."
-        else:            
+        else:
             file = open("data/users.txt", "a")
-            file.write(name + "\n")
+            file.write(user + "\n")
             register_message = "You are now registered. Please sign in to continue."
         return render_template("index.html", register_message=register_message)
 
 
-@app.route("/riddles")
-def riddles():  
-    score = "X"
-    total_questions = "Y"
-    return render_template("riddles.html", score=score, total_questions=total_questions)
+@app.route("/riddles", methods=["GET", "POST"])
+def riddles():
+    score = 0
+    total_questions = 0
+    # opens the riddles.json file to get the riddles and answer keywords
+    with open("data/riddles.json") as riddle_data:
+        data = json.load(riddle_data)
+        random.shuffle(data["riddles"])
+        for riddle in data["riddles"]:
+          # For every riddle asked, 1 is added to the total_questions variable
+            riddle = riddle["riddle"]
+            total_questions += 1
+            
+        return render_template("riddles.html", riddle=riddle, score=score, total_questions=total_questions)
 
 if __name__ == '__main__':
     app.run(host=os.getenv('IP'),

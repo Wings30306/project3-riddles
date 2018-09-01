@@ -1,12 +1,15 @@
 {% extends "base.html" %} {% block content %}
 
-<form action="" method="POST">
-  <h2>Are you ready to answer some riddles, {{ username }}? Have fun and good luck!</h2>
-  {{ riddle }}
-  <input type="text" name="guess" id="guess" placeholder="Your answer">
-  <button class="btn btn-success">Submit</button>
-  <p>Game status:</p>
-  <p>You have currently answered {{ score }} out of {{ total_questions }} questions correctly.</p>
+<h2>Are you ready to answer some riddles? Have fun and good luck!</h2>
+<p>{{ riddle }}</p>
+<form name="user_answer" method="POST" action="/riddles">
+  <textarea type="text" name="guess" id="guess" placeholder="Your answer" rows=5 value="user_answer"></textarea>
+  <button type="submit" class="btn btn-success" value="user_answer">Submit</button>
 </form>
+<p>{{ comment }}</p>
+
+<p><strong>Game status:</strong></p>
+<p>You have currently answered {{ score }} out of {{ total_questions }} questions correctly.</p>
+
 
 {% endblock %}
