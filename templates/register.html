@@ -1,7 +1,7 @@
-<form name="register" method="POST">
+<form name="register" method="POST" action="/register">
   <h2>Not yet registered?<br>Please choose a username!</h2>
   <input type="text" name="new_user" id="new_user" placeholder="Your username">
-  <button class="btn btn-success" value="register">Sign up!</button>
+  <button type="submit" class="btn btn-success" value="register">Sign up!</button>
   {% if register_message %}
   {{ register_message }}
   {% endif %}

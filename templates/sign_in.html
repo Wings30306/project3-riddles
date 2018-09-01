@@ -1,7 +1,7 @@
-<form name="sign_in" action="" method="POST">
+<form name="sign_in" method="POST" action="/sign_in">
   <h2>Already registered?<br>Sign in here to play!</h2>
   <input type="text" name="username" id="username" placeholder="Your username">
-  <button class="btn btn-success" value="sign_in">Let's answer some riddles!</button>
+  <button type="submit" class="btn btn-success" value="sign_in">Let's answer some riddles!</button>
   
   {% if signin_message %}
   {{ signin_message }}
