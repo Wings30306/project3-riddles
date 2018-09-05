@@ -18,8 +18,7 @@ def sign_in():
     with open("data/users.txt", "r") as file:
         active_users = file.read().splitlines()
         if user in active_users:
-            render_template("riddles.html", username=user)
-            return redirect(url_for("riddles"))
+            return redirect(f"/riddles/{user}")
         else:
             signin_message = "Sorry, this user is incorrect. New user? Please register."
             return render_template("index.html", signin_message=signin_message)
@@ -39,20 +38,62 @@ def register():
         return render_template("index.html", register_message=register_message)
 
 
-@app.route("/riddles", methods=["GET", "POST"])
-def riddles():
-    score = 0
-    total_questions = 0
-    # opens the riddles.json file to get the riddles and answer keywords
+def open_riddles():
     with open("data/riddles.json") as riddle_data:
         data = json.load(riddle_data)
         random.shuffle(data["riddles"])
         for riddle in data["riddles"]:
-          # For every riddle asked, 1 is added to the total_questions variable
             riddle = riddle["riddle"]
-            total_questions += 1
-            
-        return render_template("riddles.html", riddle=riddle, score=score, total_questions=total_questions)
+        for answer in data["riddles"]:
+            answer = answer["answer"]
+            total_questions = len(data["riddles"])
+        return riddle, total_questions
+
+
+"""
+def riddles(username):
+    total_questions = open_riddles()[2]
+    riddle = open_riddles()[0]    
+    return render_template("riddles.html", riddle=riddle, total_questions=total_questions, username=username)
+
+
+def answers(username):
+    user = username
+    score = 0 
+    guess = request.form("guess")
+    guess = guess.lower
+    answer = open_riddles()[1]
+    if answer in guess:
+        message = "Well done!"
+        score += 1
+    else:
+        message = "I'm sorry, " + user + ", this answer is incorrect."
+    return render_template("riddles.html", message=message, score=score, username=username)
+"""
+
+
+@app.route("/riddles/<username>", methods=["GET", "POST"])
+def show_riddles(username):
+    user = username
+    if request.method == "POST":
+        return redirect(f"/result/{user}")
+
+    
+    riddle = open_riddles()[0]
+    return render_template("riddles.html", riddle=riddle, username=user)
+
+
+@app.route("/result/<username>", methods=["GET", "POST"])
+def result(username):
+    user = username
+    total_questions = open_riddles()[1]
+    score = 0 
+    message = "test"
+    if request.method == "POST":
+        return redirect(f"/riddles/{user}")
+    return render_template("result.html", message=message, score=score, username=username, total_questions=total_questions)
+    
+
 
 if __name__ == '__main__':
     app.run(host=os.getenv('IP'),
