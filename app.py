@@ -4,7 +4,7 @@ import os
 from collections import OrderedDict
 from flask import Flask, redirect, render_template, request, flash, url_for
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
-app = Flask(__name__)
+app = Flask(__name__, template_folder="templates")
 
 
 @app.route("/")
@@ -41,13 +41,12 @@ def register():
 def open_riddles():
     with open("data/riddles.json") as riddle_data:
         data = json.load(riddle_data)
-        random.shuffle(data["riddles"])
         for riddle in data["riddles"]:
             riddle = riddle["riddle"]
         for answer in data["riddles"]:
             answer = answer["answer"]
             total_questions = len(data["riddles"])
-        return riddle, total_questions
+        return riddle, total_questions, answer
 
 
 """
@@ -60,7 +59,7 @@ def riddles(username):
 def answers(username):
     user = username
     score = 0 
-    guess = request.form("guess")
+    guess = request.form.get("guess")
     guess = guess.lower
     answer = open_riddles()[1]
     if answer in guess:
@@ -68,17 +67,25 @@ def answers(username):
         score += 1
     else:
         message = "I'm sorry, " + user + ", this answer is incorrect."
-    return render_template("riddles.html", message=message, score=score, username=username)
+    return render_template("result.html", message=message, score=score, username=username)
 """
 
 
 @app.route("/riddles/<username>", methods=["GET", "POST"])
 def show_riddles(username):
     user = username
+    total_questions = open_riddles()[1]
+    score = 0
     if request.method == "POST":
-        return redirect(f"/result/{user}")
-
-    
+        guess = request.form.get("guess")
+        guess = guess.lower()
+        answer = open_riddles()[2]
+        if answer in guess:
+            message = "Well done!"
+            score += 1
+        else:
+            message = "I'm sorry, " + user + ", this answer is incorrect."
+        return render_template("result.html", username=user, score=score, message=message, total_questions=total_questions) 
     riddle = open_riddles()[0]
     return render_template("riddles.html", riddle=riddle, username=user)
 
@@ -86,14 +93,10 @@ def show_riddles(username):
 @app.route("/result/<username>", methods=["GET", "POST"])
 def result(username):
     user = username
-    total_questions = open_riddles()[1]
-    score = 0 
-    message = "test"
     if request.method == "POST":
         return redirect(f"/riddles/{user}")
-    return render_template("result.html", message=message, score=score, username=username, total_questions=total_questions)
+    return render_template("result.html", username=user)
     
-
 
 if __name__ == '__main__':
     app.run(host=os.getenv('IP'),

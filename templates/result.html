@@ -1,4 +1,5 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} 
+{% block content %}
 
 <p class="message">{{ message }}</p>
 <form name="result" method="POST" action="/result/{{ username }}">
@@ -8,6 +9,5 @@
 
 <p><strong>Game status:</strong></p>
 <p>You have currently answered {{ score }} out of {{ total_questions }} questions correctly.</p>
-
 
 {% endblock %}
