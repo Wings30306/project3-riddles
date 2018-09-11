@@ -16,9 +16,10 @@ def index():
 def sign_in():
     user = request.form["username"]
     with open("data/users.txt", "r") as file:
+        total_questions = 1
         active_users = file.read().splitlines()
         if user in active_users:
-            return redirect(f"/riddles/{user}")
+            return redirect(f"/riddles/{user}/{total_questions}")
         else:
             signin_message = "Sorry, this user is incorrect. New user? Please register."
             return render_template("index.html", signin_message=signin_message)
@@ -71,31 +72,41 @@ def answers(username):
 """
 
 
-@app.route("/riddles/<username>", methods=["GET", "POST"])
-def show_riddles(username):
+@app.route("/riddles/<username>/<total_questions>", methods=["GET", "POST"])
+def show_riddles(username, total_questions):
     user = username
-    total_questions = open_riddles()[1]
     score = 0
     if request.method == "POST":
         guess = request.form.get("guess")
         guess = guess.lower()
         answer = open_riddles()[2]
         if answer in guess:
-            message = "Well done!"
             score += 1
+            return redirect(f"/right_answer/{user}/{total_questions}")
         else:
-            message = "I'm sorry, " + user + ", this answer is incorrect."
-        return render_template("result.html", username=user, score=score, message=message, total_questions=total_questions) 
+            return redirect(f"/wrong_answer/{user}/{total_questions}")
     riddle = open_riddles()[0]
-    return render_template("riddles.html", riddle=riddle, username=user)
+    return render_template("riddles.html", riddle=riddle, username=user, total_questions=total_questions)
 
 
-@app.route("/result/<username>", methods=["GET", "POST"])
-def result(username):
+@app.route("/right_answer/<username>/<total_questions>", methods=["GET", "POST"])
+def result_correct(username, total_questions):
     user = username
     if request.method == "POST":
-        return redirect(f"/riddles/{user}")
-    return render_template("result.html", username=user)
+        total_questions = int(total_questions) 
+        total_questions += 1
+        return redirect(f"/riddles/{user}/{total_questions}")
+    return render_template("right_answer.html", username=user)
+
+
+@app.route("/wrong_answer/<username>/<total_questions>", methods=["GET", "POST"])
+def result_wrong(username, total_questions):
+    user = username
+    if request.method == "POST":
+        total_questions = int(total_questions) 
+        total_questions += 1
+        return redirect(f"/riddles/{user}/{total_questions}")
+    return render_template("wrong_answer.html", username=user)
     
 
 if __name__ == '__main__':

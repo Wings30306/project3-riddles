@@ -1,0 +1,13 @@
+{% extends "base.html" %} 
+{% block content %}
+
+<p class="message">I'm sorry, {{ username }}, this answer is incorrect.</p>
+<form name="result" method="POST" action="/wrong_answer/{{ username }}/{{ total_questions }}">
+<button type="submit" class="btn btn-success">Next Question</button>
+</form>
+
+
+<p><strong>Game status:</strong></p>
+<p>You have currently answered {{ score }} out of {{ total_questions }} questions correctly.</p>
+
+{% endblock %}
