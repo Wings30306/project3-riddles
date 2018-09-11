@@ -1,8 +1,8 @@
 {% extends "base.html" %} 
 {% block content %}
 
-<p class="message">I'm sorry, {{ username }}, this answer is incorrect.</p>
-<form name="result" method="POST" action="/wrong_answer/{{ username }}/{{ total_questions }}">
+<p class="message">Well done {{ username }}, that was the correct answer!</p>
+<form name="result" method="POST" action="/rightanswer/{{ username }}/{{ total_questions }}">
 <button type="submit" class="btn btn-success">Next Question</button>
 </form>
 
