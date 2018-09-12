@@ -2,7 +2,7 @@
 {% block content %}
 
 <p class="message">I'm sorry, {{ username }}, this answer is incorrect.</p>
-<form name="result" method="POST" action="/wronganswer/{{ username }}/{{ total_questions }}">
+<form name="wronganswer" method="POST" action="/wronganswer/{{ username }}/{{score}}/{{ total_questions }}">
 <button type="submit" class="btn btn-success">Next Question</button>
 </form>
 
