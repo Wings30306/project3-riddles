@@ -60,22 +60,6 @@ def riddles(username):
 
 def answers(username):
     user = username
-    score = 0 
-    guess = request.form.get("guess")
-    guess = guess.lower
-    answer = open_riddles()[1]
-    if answer in guess:
-        message = "Well done!"
-        score += 1
-    else:
-        message = "I'm sorry, " + user + ", this answer is incorrect."
-    return render_template("result.html", message=message, score=score, username=username)
-"""
-
-
-@app.route("/riddles/<username>/<score>/<total_questions>", methods=["GET", "POST"])
-def show_riddles(username, total_questions, score):
-    user = username
     new_score = int(score)
     if request.method == "POST":
         guess = request.form.get("guess")
@@ -87,7 +71,17 @@ def show_riddles(username, total_questions, score):
         else:
             return redirect(f"/wronganswer/{user}/{new_score}/{total_questions}")
     riddle = open_riddles()[0]
-    return render_template("riddles.html", riddle=riddle, username=user, total_questions=total_questions, score=score)
+"""
+
+
+@app.route("/riddles/<username>/<score>/<total_questions>", methods=["GET", "POST"])
+def show_riddles(username, total_questions, score):
+    data = []
+    with open("data/riddles.json", "r") as riddle_data:
+        data = json.load(riddle_data)
+        for riddle in data["riddles"]:
+            answer = riddle["answer"]
+    return render_template("riddles.html", username=username, total_questions=total_questions, score=score, riddles_data=data, answer=answer)
 
 
 @app.route("/rightanswer/<username>/<score>/<total_questions>", methods=["GET", "POST"])
